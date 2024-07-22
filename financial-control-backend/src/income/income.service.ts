@@ -30,7 +30,7 @@ export class IncomeService {
     const result = await this.incomeRepository.findAll(pagination);
 
     if (!result || null) {
-      throw new NotFoundException('No active sellers found');
+      throw new NotFoundException('No active incomes found');
     }
 
     return result;
@@ -43,13 +43,13 @@ export class IncomeService {
       );
     }
 
-    const user = await this.incomeRepository.findOne(search);
+    const data = await this.incomeRepository.findOne(search);
 
-    if (!user || null) {
+    if (!data || null) {
       throw new NotFoundException("Income doesn't exist or is inactive");
     }
 
-    return user;
+    return data;
   }
 
   async update(

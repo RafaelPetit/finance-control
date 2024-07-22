@@ -12,18 +12,11 @@ export class UserService {
         private readonly mapperService: MapperService
       ){}
       private readonly entity: ClassConstructor<User>;
-    
-      private toProductEntity(dto: CreateUserDto): User {
-        const product = this.mapperService.toInstance(
-          { ...dto},
-          this.entity,
-        );
-        return product;
-      }
+
     
     async create(createUserDto: CreateUserDto): Promise<CreateUserDto>{
         try {
-            const toEntity =  this.toProductEntity(createUserDto);
+            const toEntity =  this.mapperService.toEntity(createUserDto, this.entity);
             return this.userRepository.create(toEntity)
         }
         catch(e) {
