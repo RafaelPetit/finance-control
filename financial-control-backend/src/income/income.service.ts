@@ -16,17 +16,9 @@ export class IncomeService {
   ){}
   private readonly entity: ClassConstructor<Income>;
 
-  private toProductEntity(dto: CreateIncomeDto): Income {
-    const product = this.mapperService.toInstance(
-      { ...dto, status: "ACTIVE"},
-      this.entity,
-    );
-    return product;
-  }
-
   async create(createIncomeDto: CreateIncomeDto): Promise<CreateIncomeDto>{
     try {
-        const toEntity =  this.toProductEntity(createIncomeDto);
+        const toEntity =  this.mapperService.toEntity(createIncomeDto, this.entity, "ACTIVE",);
         return this.incomeRepository.create(toEntity)
     }
     catch(e) {

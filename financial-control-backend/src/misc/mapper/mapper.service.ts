@@ -21,4 +21,13 @@ export class MapperService {
       }),
     );
   }
+
+  toEntity<V, T>(dto: V, classConstructor: ClassConstructor<T>, status?: string): T {
+    const entity = this.toInstance(
+      { ...dto, status },
+      classConstructor,
+    );
+    return entity;
+  }
 }
+
