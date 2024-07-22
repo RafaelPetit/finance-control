@@ -4,7 +4,7 @@ import { parseSearchToPrisma } from "src/misc/helpers/search.helper";
 import { Pageable } from "src/misc/interface/input.interface";
 import { Paginated } from "src/misc/interface/output.interface";
 import { PrismaService } from "src/misc/prisma/prisma.service";
-import { UpdateIncomeDto } from "./dto/update-income.dto";
+import { UpdateIncomeDto } from "../dto/update-income.dto";
 
 @Injectable()
 export class IncomeRepository {

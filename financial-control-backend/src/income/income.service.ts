@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateIncomeDto } from './dto/create-income.dto';
 import { ClassConstructor } from 'class-transformer';
-import { IncomeRepository } from './income.Repository';
 import { MapperService } from 'src/misc/mapper/mapper.service';
 import { Income } from '@prisma/client';
 import { Pageable } from 'src/misc/interface/input.interface';
 import { Paginated } from 'src/misc/interface/output.interface';
 import { UpdateIncomeDto } from './dto/update-income.dto';
+import { IncomeRepository } from './repository/income.repository';
 
 @Injectable()
 export class IncomeService {
@@ -16,17 +16,9 @@ export class IncomeService {
   ){}
   private readonly entity: ClassConstructor<Income>;
 
-  private toProductEntity(dto: CreateIncomeDto): Income {
-    const product = this.mapperService.toInstance(
-      { ...dto, status: "ACTIVE"},
-      this.entity,
-    );
-    return product;
-  }
-
   async create(createIncomeDto: CreateIncomeDto): Promise<CreateIncomeDto>{
     try {
-        const toEntity =  this.toProductEntity(createIncomeDto);
+        const toEntity =  this.mapperService.toEntity(createIncomeDto, this.entity, "ACTIVE",);
         return this.incomeRepository.create(toEntity)
     }
     catch(e) {
