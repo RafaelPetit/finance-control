@@ -41,6 +41,10 @@ export class ExpenseRepository {
     };
   }
 
+  async findTotal (): Promise<Expense[]> {
+    return this.prismaService.expense.findMany()
+  }
+
   async findOne(search: Partial<Expense>): Promise<Expense> {
     const where = {
       ...parseSearchToPrisma(search),

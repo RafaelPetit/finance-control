@@ -5,79 +5,51 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import axios from "axios"
 import { Menu } from '@/components/menu';
+import { TrackingCards } from '@/components/trackingCards';
+import { Card } from '@/components/card';
 
 const Dashboard = async () => {
   const { data: income } = await axios.get("http://localhost:3000/income/all")
   const { data: expense} = await axios.get("http://localhost:3000/expense/all")
+  const { data: totalIncome} = await axios.get("http://localhost:3000/income/total")
   const { data: totalExpense} = await axios.get("http://localhost:3000/expense/total")
 
-  const CreditCard = axios.get('/user', {
-    params: {
-      category: 12345
-    }
-  })
-  // console.log(income)
-  // console.log(expense)
+  // const expenseTracking = axios.get("http://localhost:3000/expense/all/", {
+  //   params: {
+  //     category: "FOOD"
+  //   }
+  // })
+
+  
+  
+  // const lastTransactions = [...income.data.items, ...expense.data.items].sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  
+
 
   return (
     <div className="flex min-h-screen bg-gray-100">
     <Menu/>
       <div className="flex-1 p-4">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-            <div className="bg-white p-4 rounded-lg shadow-lg">
-              <h2 className="text-gray-600">Saldo atual</h2>
-              <p className="text-2xl font-bold text-gray-600">R$ {}</p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow-lg">
-              <h2 className="text-gray-600">Receitas</h2>
-              <p className="text-2xl font-bold text-gray-600">R$ {}</p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow-lg">
-              <h2 className="text-gray-600">Despesas</h2>
-              <p className="text-2xl font-bold text-gray-600">R$ {totalExpense}</p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow-lg">
-              <h2 className="text-gray-600">Cartão de crédito</h2>
-              <p className="text-2xl font-bold text-gray-600">R$ {}</p>
-            </div>
-          </div>
-          {/* <div className="bg-white p-4 rounded-lg shadow-lg mb-4">
-            <h2 className="text-gray-600">Objetivos</h2>
-            {data.objetivos.map((objetivo, index) => (
-              <div key={index} className="mt-2">
-                <p className="text-lg font-semibold">{objetivo.nome}</p>
-                <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
-                  <div
-                    className="bg-blue-600 h-4 rounded-full"
-                    style={{ width: `${(objetivo.valorAtual / objetivo.valorObjetivo) * 100}%` }}
-                  ></div>
+          <section className="grid sm:grid-cols-12 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-2">
+            <TrackingCards fieldName='Saldo Atual'/>
+            <TrackingCards fieldName='Entradas' amount={totalIncome}/>
+            <TrackingCards fieldName='Despesas' amount={totalExpense}/>
+            <TrackingCards fieldName='Balanço' amount={totalIncome - totalExpense}/>
+            <TrackingCards fieldName='Cartão de Crédito'/>
+          </section>
+          <section className='grid-cols-2 grid gap-4'>
+              <Card>
+                <div>
+
                 </div>
-                <p className="text-sm text-gray-600">
-                  R$ {objetivo.valorAtual.toFixed(2)} de R$ {objetivo.valorObjetivo.toFixed(2)}
-                </p>
-              </div>
-            ))}
-          </div> */}
-          <div className="bg-white p-4 rounded-lg shadow-lg">
-            <h2 className="text-gray-600">Balanço mensal</h2>
-            <div className="flex justify-between mt-4">
-              <div className="flex flex-col items-center">
-                <p className="text-green-600 text-2xl font-bold">R$ {}</p>
-                <p className="text-gray-600">Receitas</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <p className="text-red-600 text-2xl font-bold">R$ {totalExpense}</p>
-                <p className="text-gray-600">Despesas</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <p className="text-gray-600 text-2xl font-bold">
-                  {/* R$ {(data.receitas - data.despesas).toFixed(2)} */}
-                </p>
-                <p className="text-gray-600">Balanço</p>
-              </div>
-            </div>
-          </div>
+              </Card>
+              <Card>
+                <div>
+
+                </div>
+              </Card>
+          </section>
         </div>
       </div>
     </div>

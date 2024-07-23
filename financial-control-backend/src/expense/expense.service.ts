@@ -35,6 +35,11 @@ export class ExpenseService {
     
         return result;
       }
+
+      async findTotal(): Promise<number> {
+        const allproducts = await this.expenseRepository.findTotal()
+        return allproducts.reduce((total, item) => total + item.amount, 0); 
+      }
     
       async findOne(search: Partial<Expense>): Promise<Expense> {
         if (Object.keys(search).length === 0) {
