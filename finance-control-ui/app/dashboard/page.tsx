@@ -6,6 +6,9 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 const Dashboard = () => {
+  const [incomeData, setIncomeData] = useState([])
+  const [expenseData, setExpenseData] = useState([])
+
   const [data, setData] = useState({
     saldoAtual: 10560.00,
     receitas: 2000.00,
@@ -17,11 +20,18 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    // Aqui você pode fazer uma chamada para seu backend para buscar os dados reais
-    // fetch('/api/dashboard')
-    //   .then(response => response.json())
-    //   .then(data => setData(data));
-  }, []);
+    fetch('http://localhost:3000/income')
+    .then(Response => Response.json())
+    .then(data => setIncomeData(data))
+    .catch(error => console.error('erro ao buscar dados de entrada', error))
+  })
+
+  useEffect(() => {
+    fetch('http://localhost:3000/expense')
+    .then(Response => Response.json())
+    .then(data => setExpenseData(data))
+    .catch(error => console.error('erro ao buscar dados de saida', error))
+  })
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -45,19 +55,19 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <div className="bg-white p-4 rounded-lg shadow-lg">
               <h2 className="text-gray-600">Saldo atual</h2>
-              <p className="text-2xl font-bold">R$ {data.saldoAtual.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-gray-600">R$ {data.saldoAtual.toFixed(2)}</p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-lg">
               <h2 className="text-gray-600">Receitas</h2>
-              <p className="text-2xl font-bold">R$ {data.receitas.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-gray-600">R$ {data.receitas.toFixed(2)}</p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-lg">
               <h2 className="text-gray-600">Despesas</h2>
-              <p className="text-2xl font-bold">R$ {data.despesas.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-gray-600">R$ {data.despesas.toFixed(2)}</p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-lg">
               <h2 className="text-gray-600">Cartão de crédito</h2>
-              <p className="text-2xl font-bold">R$ {data.cartaoCredito.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-gray-600">R$ {data.cartaoCredito.toFixed(2)}</p>
             </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-lg mb-4">
