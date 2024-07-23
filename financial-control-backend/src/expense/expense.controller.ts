@@ -35,6 +35,15 @@ export class ExpenseController {
       return this.expenseService.findTotal()
     }
 
+    @Get("/totalCreditCard")
+    @ApiResponse({
+      type:ControllerOutput<Expense>,
+      description: 'Return the total Credit Card amount'
+    })
+    async findTotalCreditCard() : Promise<number>{
+      return this.expenseService.findTotalCreditCard()
+    }
+
   @Get('/all')
   @ApiResponse({
     type: ControllerPaginatedOutput<Expense>,

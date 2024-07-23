@@ -45,6 +45,15 @@ export class ExpenseRepository {
     return this.prismaService.expense.findMany()
   }
 
+  async findTotalCreditCard (): Promise<Expense[]> {
+    return this.prismaService.expense.findMany(
+      {where: 
+      {
+        paymentMethod: "CREDIT"
+      }
+    })
+  }
+
   async findOne(search: Partial<Expense>): Promise<Expense> {
     const where = {
       ...parseSearchToPrisma(search),

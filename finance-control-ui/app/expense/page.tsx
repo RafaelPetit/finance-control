@@ -9,6 +9,7 @@ const Expense = () => {
     description: '',
     amount: '',
     category: 'FOOD',
+    paymentMethod: 'CREDIT'
   });
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -32,6 +33,7 @@ const Expense = () => {
           description: formData.description,
           amount: parseFloat(formData.amount),
           category: formData.category,
+          paymentMethod: formData.paymentMethod,
           userId: 1 //retirar depois de autenticar o user
         }),
       });
@@ -46,6 +48,7 @@ const Expense = () => {
         description: '',
         amount: '',
         category: 'FOOD',
+        paymentMethod: 'CREDIT'
       });
     } catch (error) {
       console.error('Erro ao cadastrar despesa:', error);
@@ -109,6 +112,19 @@ const Expense = () => {
                 <option value="INVESTMENTS">Investimentos</option>
                 <option value="INSURANCE">Seguros</option>
                 <option value="OTHER">Outro</option>
+              </select>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label htmlFor="paymentMethod" className="text-gray-600">Método de Pagamento</label>
+              <select
+                name="paymentMethod"
+                id="paymentMethod"
+                value={formData.paymentMethod}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-600"
+                required>
+                <option value="CREDIT">Cartão de Crédito</option>
+                <option value="DEBIT">Cartão de Débito</option>
               </select>
             </div>
             <button

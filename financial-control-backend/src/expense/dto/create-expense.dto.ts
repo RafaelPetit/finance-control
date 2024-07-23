@@ -25,9 +25,19 @@ export class CreateExpenseDto {
     category: $Enums.ExpenseCategory
 
     @ApiProperty({
+        enum: ['CREDIT', "DEBIT"],
+        enumName: "$Enums.PaymentMethod",
+        description: 'payment Method'
+    })
+    @IsUppercase({ message: 'payment method must bem upperCase' })
+    @IsString({ message: 'payment method must be a string' })
+    @IsNotEmpty({ message: 'payment method must not be empty' })
+    paymentMethod: $Enums.PaymentMethod;
+    
+    @ApiProperty({
         description: 'usuario relacionada a essa saida',
         example: 1,
-      })
+    })
       @IsNotEmpty({message: 'userId must not be empty'})
       @IsNumber({allowInfinity: false, allowNaN: false})
     userId: number
@@ -41,4 +51,5 @@ export class CreateExpenseDto {
     @IsString({ message: 'status must be a string' })
     @IsNotEmpty({ message: 'Status must not be empty' })
     status: $Enums.Status;
+
 }

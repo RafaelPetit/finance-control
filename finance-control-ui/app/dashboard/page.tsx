@@ -13,6 +13,7 @@ const Dashboard = async () => {
   const { data: expense} = await axios.get("http://localhost:3000/expense/all")
   const { data: totalIncome} = await axios.get("http://localhost:3000/income/total")
   const { data: totalExpense} = await axios.get("http://localhost:3000/expense/total")
+  const {data: totalCreditCard} = await axios.get("http://localhost:3000/expense/totalCreditCard")
 
   // const expenseTracking = axios.get("http://localhost:3000/expense/all/", {
   //   params: {
@@ -36,7 +37,7 @@ const Dashboard = async () => {
             <TrackingCards fieldName='Entradas' amount={totalIncome}/>
             <TrackingCards fieldName='Despesas' amount={totalExpense}/>
             <TrackingCards fieldName='Balanço' amount={totalIncome - totalExpense}/>
-            <TrackingCards fieldName='Cartão de Crédito'/>
+            <TrackingCards fieldName='Cartão de Crédito' amount={totalCreditCard}/>
           </section>
           <section className='grid-cols-2 grid gap-4'>
               <Card>
