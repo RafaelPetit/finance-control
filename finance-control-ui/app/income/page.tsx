@@ -36,18 +36,18 @@ const Income = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao cadastrar despesa');
+        throw new Error('Erro ao cadastrar entrada');
       }
 
       const result = await response.json();
-      console.log('Despesa cadastrada com sucesso:', result);
+      console.log('Entrada cadastrada com sucesso:', result);
       setFormData({
         description: '',
         amount: '',
         category: 'SALARY',
       });
     } catch (error) {
-      console.error('Erro ao cadastrar despesa:', error);
+      console.error('Erro ao cadastrar entrada:', error);
     }
   };
 
