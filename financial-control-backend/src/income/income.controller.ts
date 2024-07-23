@@ -40,6 +40,15 @@ export class IncomeController {
     };
   }
 
+  @Get("/total")
+    @ApiResponse({
+      type:ControllerOutput<Income>,
+      description: 'Return the total amount'
+    })
+    async findTotal() :Promise<number>{
+      return this.incomeService.findTotal()
+    }
+
   @Get()
   @ApiResponse({
     type: ControllerOutput<Income>,
