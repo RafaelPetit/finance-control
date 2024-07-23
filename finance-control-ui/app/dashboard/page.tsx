@@ -19,6 +19,8 @@ const Dashboard = () => {
     ],
   });
 
+  
+
   useEffect(() => {
     fetch('http://localhost:3000/income')
     .then(Response => Response.json())

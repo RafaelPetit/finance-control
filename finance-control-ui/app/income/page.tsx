@@ -17,14 +17,42 @@ const Income = () => {
     });
   };
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    console.log(formData);
+    console.log('Form submission started');
+
+    try {
+      const response = await fetch('http://localhost:3000/income', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          description: formData.description,
+          amount: parseFloat(formData.amount),
+          category: formData.category,
+          userId: 1 //retirar depois de autenticar o user
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao cadastrar despesa');
+      }
+
+      const result = await response.json();
+      console.log('Despesa cadastrada com sucesso:', result);
+      setFormData({
+        description: '',
+        amount: '',
+        category: 'SALARY',
+      });
+    } catch (error) {
+      console.error('Erro ao cadastrar despesa:', error);
+    }
   };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Menu Lateral */}
       <div className="w-16 bg-white shadow-md flex flex-col items-center py-4">
         <Link href="/dashboard">
           <HomeIcon className="h-6 w-6 text-gray-600 hover:text-blue-500 mb-4" />
@@ -37,10 +65,9 @@ const Income = () => {
         </Link>
       </div>
 
-      {/* Conteúdo Principal */}
       <div className="flex flex-1 items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-xl">
-          <h1 className="text-2xl font-bold mb-6 text-center">Cadastrar Entrada</h1>
+          <h1 className="text-2xl font-bold mb-6 text-center text-gray-600">Cadastrar Entrada</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col space-y-2">
               <label htmlFor="description" className="text-gray-600">Descrição</label>
@@ -51,7 +78,7 @@ const Income = () => {
                 placeholder="Descrição"
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
                 required
               />
             </div>
@@ -64,7 +91,7 @@ const Income = () => {
                 placeholder="Valor"
                 value={formData.amount}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
                 required
               />
             </div>
@@ -75,7 +102,7 @@ const Income = () => {
                 id="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
                 required
               >
                 <option value="SALARY">Salário</option>

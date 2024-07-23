@@ -67,7 +67,7 @@ const Expense = () => {
 
       <div className="flex flex-1 items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-xl">
-          <h1 className="text-2xl font-bold mb-6 text-center">Cadastrar Saída</h1>
+          <h1 className="text-2xl font-bold mb-6 text-center text-gray-600">Cadastrar Saída</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col space-y-2">
               <label htmlFor="description" className="text-gray-600">Descrição</label>
