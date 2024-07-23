@@ -1,4 +1,5 @@
 "use client"
+import { Menu } from '@/components/menu';
 import { PlusIcon, CurrencyDollarIcon, HomeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -53,18 +54,7 @@ const Income = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <div className="w-16 bg-white shadow-md flex flex-col items-center py-4">
-        <Link href="/dashboard">
-          <HomeIcon className="h-6 w-6 text-gray-600 hover:text-blue-500 mb-4" />
-        </Link>
-        <Link href="/income">
-          <PlusIcon className="h-6 w-6 text-gray-600 hover:text-blue-500 mb-4" />
-        </Link>
-        <Link href="/expense">
-          <CurrencyDollarIcon className="h-6 w-6 text-gray-600 hover:text-blue-500 mb-4" />
-        </Link>
-      </div>
-
+      <Menu />
       <div className="flex flex-1 items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-xl">
           <h1 className="text-2xl font-bold mb-6 text-center text-gray-600">Cadastrar Entrada</h1>
