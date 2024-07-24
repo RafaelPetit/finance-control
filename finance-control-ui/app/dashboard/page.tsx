@@ -23,7 +23,7 @@ const Dashboard =  () => {
       setIncome(data)
 
       const total = data.reduce((total: any, item: { amount: any; }) => total + item.amount, 0); ;
-      setTotalIncome(total);
+      setTotalIncome(parseFloat(total));
     })
     .catch(error => {
       console.error("There was an error fetching the data!", error);
@@ -37,7 +37,7 @@ const Dashboard =  () => {
       setExpense(response.data)
 
       const total = data.reduce((total: any, item: { amount: any; }) => total + item.amount, 0); ;
-      setTotalExpense(total);
+      setTotalExpense(parseFloat(total));
     })
     .catch(error => {
       console.error("There was an error fetching the data!", error);
@@ -47,7 +47,7 @@ const Dashboard =  () => {
   useEffect(() => {
     axios("http://localhost:3000/income/monthlyTotalAmount/")
     .then(response => {
-      setIncomeMonthlyTotalAmount(response.data)
+      setIncomeMonthlyTotalAmount(parseFloat(response.data))
     })
     .catch(error => {
       console.error("There was an error fetching the data!", error);
@@ -57,7 +57,7 @@ const Dashboard =  () => {
   useEffect(() => {
     axios("http://localhost:3000/expense/monthlyTotalAmount/")
     .then(response => {
-      setExpenseMonthlyTotalAmount(response.data)
+      setExpenseMonthlyTotalAmount(parseFloat(response.data))
     })
     .catch(error => {
       console.error("There was an error fetching the data!", error);
@@ -67,7 +67,7 @@ const Dashboard =  () => {
   useEffect(() => {
     axios("http://localhost:3000/expense/monthlyCreditCardTotalAmount/")
     .then(response => {
-      setExpenseMonthlyCreditCardTotalAmount(response.data)
+      setExpenseMonthlyCreditCardTotalAmount(parseFloat(response.data))
     }).catch(error => {
       console.error("There was an error fetching the data!", error);
     });

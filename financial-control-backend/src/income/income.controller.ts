@@ -11,7 +11,6 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class IncomeController {
     constructor(private readonly incomeService: IncomeService){}
 
-    @UseGuards(AuthGuard)
     @Post()
     @ApiResponse({
     description: 'create a new Income',
@@ -23,7 +22,6 @@ export class IncomeController {
         return data
     }
 
-    @UseGuards(AuthGuard)
     @Get("/all")
       @ApiResponse({
         type: "<Income[]>",
@@ -33,7 +31,6 @@ export class IncomeController {
         return await this.incomeService.findAll()
     }
 
-    @UseGuards(AuthGuard)
     @Get("/monthlyTotalAmount")
       @ApiResponse({
         type: "<number>",
@@ -43,7 +40,6 @@ export class IncomeController {
         return await this.incomeService.findMonthlyTotalAmount()
     }
 
-    @UseGuards(AuthGuard)
     @Get()
     @ApiResponse({
       type: "<Income>",
@@ -55,7 +51,6 @@ export class IncomeController {
       return  await this.incomeService.findOne(search)
     }
 
-    @UseGuards(AuthGuard)
     @Patch(':id')
     @ApiResponse({
       type: "<Income>",
@@ -72,7 +67,6 @@ export class IncomeController {
       return data
     }
 
-    @UseGuards(AuthGuard)
     @Delete(':id')
     @ApiResponse({
       type: "<Income>",

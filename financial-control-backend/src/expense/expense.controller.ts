@@ -11,7 +11,6 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class ExpenseController {
     constructor(private readonly expenseService: ExpenseService){}
 
-    @UseGuards(AuthGuard)
     @Post()
     @ApiResponse({
     description: 'create new Expense',
@@ -21,7 +20,6 @@ export class ExpenseController {
       return await this.expenseService.create(userDto);
     }
 
-    @UseGuards(AuthGuard)
     @Get("/all")
     @ApiResponse({
       type: "number",
@@ -31,7 +29,6 @@ export class ExpenseController {
       return await this.expenseService.findAll()
     }
 
-    @UseGuards(AuthGuard)
     @Get("/monthlyTotalAmount")
     @ApiResponse({
       type: "number",
@@ -41,7 +38,6 @@ export class ExpenseController {
       return await this.expenseService.findMonthlyTotalAmount()
     }
 
-    @UseGuards(AuthGuard)
     @Get("/monthlyCreditCardTotalAmount")
     @ApiResponse({
       type: "number",
@@ -51,7 +47,6 @@ export class ExpenseController {
       return await this.expenseService.findMonthlyCreditCardTotalAmount()
     }
 
-    @UseGuards(AuthGuard)
     @Get()
     @ApiResponse({
       type: "<Expense>",
@@ -63,7 +58,6 @@ export class ExpenseController {
       return await this.expenseService.findOne(search)
     }
 
-    @UseGuards(AuthGuard)
     @Patch(':id')
     @ApiResponse({
       type: "<Expense>",
@@ -80,7 +74,6 @@ export class ExpenseController {
       return data;
     }
 
-    @UseGuards(AuthGuard)
     @Delete(':id')
     @ApiResponse({
       type: "<Expense>",
