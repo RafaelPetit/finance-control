@@ -1,15 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { Expense } from '@prisma/client';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { PartialExpenseDto } from './dto/partial-expense.dto';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { ExpenseService } from './expense.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('expense')
 export class ExpenseController {
     constructor(private readonly expenseService: ExpenseService){}
 
+    @UseGuards(AuthGuard)
     @Post()
     @ApiResponse({
     description: 'create new Expense',
@@ -19,6 +21,7 @@ export class ExpenseController {
       return await this.expenseService.create(userDto);
     }
 
+    @UseGuards(AuthGuard)
     @Get("/all")
     @ApiResponse({
       type: "number",
@@ -28,6 +31,7 @@ export class ExpenseController {
       return await this.expenseService.findAll()
     }
 
+    @UseGuards(AuthGuard)
     @Get("/monthlyTotalAmount")
     @ApiResponse({
       type: "number",
@@ -37,6 +41,7 @@ export class ExpenseController {
       return await this.expenseService.findMonthlyTotalAmount()
     }
 
+    @UseGuards(AuthGuard)
     @Get("/monthlyCreditCardTotalAmount")
     @ApiResponse({
       type: "number",
@@ -46,42 +51,44 @@ export class ExpenseController {
       return await this.expenseService.findMonthlyCreditCardTotalAmount()
     }
 
+    @UseGuards(AuthGuard)
+    @Get()
+    @ApiResponse({
+      type: "<Expense>",
+      description: 'Find one Expense',
+    })
+    async findOne(
+      @Body() search: PartialExpenseDto,
+    ): Promise<Expense> {
+      return await this.expenseService.findOne(search)
+    }
 
-  @Get()
-  @ApiResponse({
-    type: "<Expense>",
-    description: 'Find one Expense',
-  })
-  async findOne(
-    @Body() search: PartialExpenseDto,
-  ): Promise<Expense> {
-    return await this.expenseService.findOne(search)
-  }
+    @UseGuards(AuthGuard)
+    @Patch(':id')
+    @ApiResponse({
+      type: "<Expense>",
+      description: 'Modify a Expense',
+    })
+    async update(
+      @Param('id') id: number,
+      @Body() updateExpenseDto: UpdateExpenseDto,
+    ): Promise<Expense> {
+      const data = await this.expenseService.update(
+        +id,
+        updateExpenseDto,
+      );
+      return data;
+    }
 
-  @Patch(':id')
-  @ApiResponse({
-    type: "<Expense>",
-    description: 'Modify a Expense',
-  })
-  async update(
-    @Param('id') id: number,
-    @Body() updateExpenseDto: UpdateExpenseDto,
-  ): Promise<Expense> {
-    const data = await this.expenseService.update(
-      +id,
-      updateExpenseDto,
-    );
-    return data;
-  }
-
-  @Delete(':id')
-  @ApiResponse({
-    type: "<Expense>",
-    description: 'Delete one Expense',
-  })
-  async delete(
-    @Param('id') id: number,
-  ): Promise<Expense> {
-    return await this.expenseService.delete(+id,);
-  }
+    @UseGuards(AuthGuard)
+    @Delete(':id')
+    @ApiResponse({
+      type: "<Expense>",
+      description: 'Delete one Expense',
+    })
+    async delete(
+      @Param('id') id: number,
+    ): Promise<Expense> {
+      return await this.expenseService.delete(+id,);
+    }
 }
