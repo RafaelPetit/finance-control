@@ -13,7 +13,7 @@ const Login = () => {
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
           <form className="space-y-6">
-            <h1 className="text-3xl font-bold text-center">Welcome Back</h1>
+            <h1 className="text-3xl font-bold text-center text-gray-600">Welcome Back</h1>
             <div className="flex justify-center">
               <div className="bg-gray-300 text-gray-700 rounded-full w-16 h-16 flex items-center justify-center text-4xl">A</div>
             </div>
@@ -47,7 +47,7 @@ const Login = () => {
             >
               LOGIN
             </button>
-            <p className="text-center">
+            <p className="text-center text-gray-600">
               Don't have an account? <a href="/signUp" className="text-blue-500 hover:underline">Sign Up</a>
             </p>
           </form>

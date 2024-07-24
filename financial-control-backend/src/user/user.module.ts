@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { MapperService } from 'src/misc/mapper/mapper.service';
 import { MapperModule } from 'src/misc/mapper/mapper.module';
-import { UserRepository } from './repository/income.respository';
+import { UserRepository } from './repository/user.respository';
 
 @Module({
   imports: [MapperModule],
