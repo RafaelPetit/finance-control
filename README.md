@@ -8,13 +8,13 @@ Este projeto é um sistema de controle de finanças pessoais que permite aos usu
 ## Tecnologias Utilizadas
 
 ### Frontend
-- **ReactJS** com **NextJS** ou **React Native** com **Expo**
+- **ReactJS** com **NextJS**
 - **TypeScript** para tipagem estática
 
 ### Backend
-- **NodeJS** com **ExpressJS** ou **NestJS**
+- **NodeJS** com  **NestJS**
 - **MySQL** como banco de dados
-- **TypeORM** ou **Prisma** como ORM
+- **Prisma** como ORM
 - **bcrypt** para criptografia de senhas
 - **JWT** para autenticação
 
@@ -27,10 +27,10 @@ Este projeto é um sistema de controle de finanças pessoais que permite aos usu
    - Autenticação JWT
 
 2. **Gerenciamento de Finanças**
-   - Registro de receitas e despesas
+   - Registro de receitas e despesas mensais
    - Edição e remoção de transações
    - Categorias de receitas e despesas
-   - Visualização do saldo atual e histórico de transações
+   - Visualização do saldo atual
 
 3. **Interface de Usuário**
    - Design clean e intuitivo
@@ -40,36 +40,41 @@ Este projeto é um sistema de controle de finanças pessoais que permite aos usu
 
 ### Backend
 ```
-finance-control/
-│
+financial-control-backend/
+├── dist/
+├── node_modules/
+├── prisma/
+│   ├── migrations/
+│   ├── schema.prisma
 ├── src/
-│   ├── controllers/
-│   ├── entities/
-│   ├── middlewares/
-│   ├── routes/
-│   ├── services/
-│   ├── index.ts
-│   └── ormconfig.ts
-│
-├── package.json
-└── tsconfig.json
+│   ├── auth/
+│   ├── expense/
+│   ├── income/
+│   ├── misc/
+│   ├── user/
+│   ├── app.module.ts
+│   ├── main.ts
+├── .env
+├── .env.example
 ```
 
 ### Frontend
 ```
-finance-control-frontend/
-│
-├── public/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   ├── styles/
-│   ├── App.tsx
-│   └── index.tsx
-│
-├── package.json
-└── tsconfig.json
+finance-control-ui/
+├── app/
+│   ├── auth/
+│   ├── dashboard/
+│   ├── expense/
+│   ├── income/
+│   ├── signUp/
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.tsx
+├── components/
+│   ├── card.tsx
+│   ├── menu.tsx
+│   ├── trackingCards.tsx
 ```
 
 ## Instalação e Execução
@@ -81,7 +86,7 @@ finance-control-frontend/
 ### Backend
 1. Clone o repositório
    ```bash
-   git clone https://github.com/seuusuario/finance-control.git
+   git clone https://github.com/RafaelPetit/finance-control.git
    cd finance-control
    ```
 
@@ -90,23 +95,9 @@ finance-control-frontend/
    npm install
    ```
 
-3. Configure o banco de dados no arquivo `src/ormconfig.ts`
+3. Configure o banco de dados no arquivo `.env`
    ```typescript
-   import { DataSource } from 'typeorm';
-   import { User } from './entities/User';
-   import { Transaction } from './entities/Transaction';
-
-   export const AppDataSource = new DataSource({
-       type: "mysql",
-       host: "localhost",
-       port: 3306,
-       username: "your_username",
-       password: "your_password",
-       database: "finance_control",
-       entities: [User, Transaction],
-       synchronize: true,
-       logging: true,
-   });
+   DATABASE_URL="mysql://user:password@localhost:3306/data-base"
    ```
 
 4. Inicie o servidor
@@ -117,8 +108,8 @@ finance-control-frontend/
 ### Frontend
 1. Clone o repositório
    ```bash
-   git clone https://github.com/seuusuario/finance-control-frontend.git
-   cd finance-control-frontend
+   git clone https://github.com/RafaelPetit/finance-control.git
+   cd finance-control
    ```
 
 2. Instale as dependências
@@ -128,7 +119,7 @@ finance-control-frontend/
 
 3. Inicie o aplicativo
    ```bash
-   npm run dev
+   npm run dev -- -p 3001
    ```
 
 ## Contato
