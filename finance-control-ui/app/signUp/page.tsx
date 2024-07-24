@@ -18,20 +18,47 @@ const SignUp = () => {
     });
   };
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       setPasswordError('As senhas não coincidem');
       return;
     }
-    setPasswordError('');
-    console.log('Cadastro realizado:', formData);
+
+    try {
+      const response = await fetch('http://localhost:3000/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao cadastrar usuário');
+      }
+      
+      const result = await response.json();
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      });
+      console.log('Cadastro realizado:', result);
+  } catch (error) {
+    console.error('Erro ao cadastrar usuário:', error);
+  }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-xl">
-        <h1 className="text-2xl font-bold mb-6 text-center">Sign Up</h1>
+        <h1 className="text-2xl text-gray-600 font-bold mb-6 text-center">Sign Up</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col space-y-2">
             <label htmlFor="name" className="text-gray-600">Nome</label>
@@ -42,7 +69,7 @@ const SignUp = () => {
               placeholder="Nome"
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border text-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
@@ -55,7 +82,7 @@ const SignUp = () => {
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border text-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
@@ -68,7 +95,7 @@ const SignUp = () => {
               placeholder="Senha"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border text-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
@@ -81,7 +108,7 @@ const SignUp = () => {
               placeholder="Confirmar Senha"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border text-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
@@ -90,11 +117,11 @@ const SignUp = () => {
           )}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg hover:from-purple-500 hover:to-blue-500 transition-colors duration-300"
+            className="w-full bg-gradient-to-r  from-blue-500 to-purple-500 text-white py-3 rounded-lg hover:from-purple-500 hover:to-blue-500 transition-colors duration-300"
           >
             Sign Up
           </button>
-          <p className="text-center">
+          <p className="text-center text-gray-600">
             Already have an account? <a href="/auth/login" className="text-blue-500 hover:underline">Login</a>
           </p>
         </form>
