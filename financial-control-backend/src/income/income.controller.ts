@@ -1,10 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { IncomeService } from './income.service';
-import { ControllerOutput, ControllerPaginatedOutput } from 'src/misc/interface/output.interface';
 import { ApiResponse } from '@nestjs/swagger';
 import { Income } from '@prisma/client';
 import { CreateIncomeDto } from './dto/create-income.dto';
-import { Pageable } from 'src/misc/interface/input.interface';
 import { PartialIncomeDto } from './dto/partial-income.dto';
 import { UpdateIncomeDto } from './dto/update-income.dto';
 
@@ -14,80 +12,72 @@ export class IncomeController {
 
     @Post()
     @ApiResponse({
-    description: 'cadastra novos usuarios',
-    type: ControllerOutput<Income>,
+    description: 'create a new Income',
+    type: "<Income>",
   })
-    async create(@Body() userDto: CreateIncomeDto): Promise<ControllerOutput> {
+    async create(@Body() userDto: CreateIncomeDto): Promise<CreateIncomeDto> {
         const data =  this.incomeService.create(userDto);
 
-        return {
-        data,
-        error: null,
-        };
+        return data
     }
 
-  @Get('/all')
-  @ApiResponse({
-    type: ControllerPaginatedOutput<Income>,
-    description: 'Find all Incomes',
-  })
-  async findAll(
-    @Body() pagination: Pageable,
-  ): Promise<ControllerPaginatedOutput<Income>> {
-    return {
-      data: await this.incomeService.findAll(pagination),
-      error: null,
-    };
+
+  @Get("/all")
+    @ApiResponse({
+      type: "<Income[]>",
+      description: 'Return all Incomes'
+    })
+    async findAll() :Promise<Income[]>{
+      return await this.incomeService.findAll()
   }
 
-  @Get("/total")
+
+  @Get("/monthlyTotalAmount")
     @ApiResponse({
-      type:ControllerOutput<Income>,
-      description: 'Return the total amount'
+      type: "<number>",
+      description: 'Return the total amount of the month'
     })
     async findTotal() :Promise<number>{
-      return this.incomeService.findTotal()
-    }
+      return await this.incomeService.findMonthlyTotalAmount()
+  }
 
   @Get()
   @ApiResponse({
-    type: ControllerOutput<Income>,
+    type: "<Income>",
     description: 'Find one Income',
   })
   async findOne(
     @Body() search: PartialIncomeDto,
-  ): Promise<ControllerOutput<Income>> {
-    return {
-      data: await this.incomeService.findOne(search),
-      error: null,
-    };
+  ): Promise<Income> {
+    return  await this.incomeService.findOne(search)
   }
 
   @Patch(':id')
   @ApiResponse({
-    type: ControllerOutput<Income>,
+    type: "<Income>",
     description: 'Modify a Income',
   })
   async update(
     @Param('id') id: number,
     @Body() updateIncomeDto: UpdateIncomeDto,
-  ): Promise<ControllerOutput<Income>> {
+  ): Promise<Income> {
     const data = await this.incomeService.update(
       +id,
       updateIncomeDto,
     );
-    return { data, error: null };
+    return data
   }
+
 
   @Delete(':id')
   @ApiResponse({
-    type: ControllerOutput<Income>,
+    type: "<Income>",
     description: 'Delete one Income',
   })
   async delete(
     @Param('id') id: number,
-  ): Promise<ControllerOutput<Income>> {
-    const data = await this.incomeService.delete(+id,);
-    return { data, error: null };
+  ): Promise<Income> {
+    const data = await this.incomeService.delete(+id);
+    return data
   }
 }

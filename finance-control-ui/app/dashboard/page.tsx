@@ -1,43 +1,89 @@
+"use client"
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { HomeIcon } from '@heroicons/react/24/outline';
-import { PlusIcon } from '@heroicons/react/24/outline';
-import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import axios from "axios"
 import { Menu } from '@/components/menu';
 import { TrackingCards } from '@/components/trackingCards';
 import { Card } from '@/components/card';
 
-const Dashboard = async () => {
-  const { data: income } = await axios.get("http://localhost:3000/income/all")
-  const { data: expense} = await axios.get("http://localhost:3000/expense/all")
-  const { data: totalIncome} = await axios.get("http://localhost:3000/income/total")
-  const { data: totalExpense} = await axios.get("http://localhost:3000/expense/total")
-  const {data: totalCreditCard} = await axios.get("http://localhost:3000/expense/totalCreditCard")
 
-  // const expenseTracking = axios.get("http://localhost:3000/expense/all/", {
-  //   params: {
-  //     category: "FOOD"
-  //   }
-  // })
-
+const Dashboard =  () => {
+  const [Income, setIncome] = useState(Object)
+  const [expense, setExpense] = useState(Object)
+  const [totalIncome, setTotalIncome] = useState(0)
+  const [totalExpense, setTotalExpense] = useState(0)
+  const [incomeMonthlyTotalAmount, setIncomeMonthlyTotalAmount] = useState(0);
+  const [expenseMonthlyTotalAmount, setExpenseMonthlyTotalAmount] = useState(0);
+  const [expenseMonthlyCreditCardTotalAmount, setExpenseMonthlyCreditCardTotalAmount] = useState(0)
+ 
   
-  
-  // const lastTransactions = [...income.data.items, ...expense.data.items].sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-  
+  useEffect(() => {
+    axios("http://localhost:3000/income/all/")
+    .then(response => {
+      const data = response.data;
+      setIncome(data)
 
+      const total = data.reduce((total: any, item: { amount: any; }) => total + item.amount, 0); ;
+      setTotalIncome(total);
+    })
+    .catch(error => {
+      console.error("There was an error fetching the data!", error);
+    });
+  }, [])
 
+  useEffect(() => {
+    axios("http://localhost:3000/expense/all/")
+    .then(response => {
+      const data = response.data;
+      setExpense(response.data)
+
+      const total = data.reduce((total: any, item: { amount: any; }) => total + item.amount, 0); ;
+      setTotalExpense(total);
+    })
+    .catch(error => {
+      console.error("There was an error fetching the data!", error);
+    });
+  }, [])
+
+  useEffect(() => {
+    axios("http://localhost:3000/income/monthlyTotalAmount/")
+    .then(response => {
+      setIncomeMonthlyTotalAmount(response.data)
+    })
+    .catch(error => {
+      console.error("There was an error fetching the data!", error);
+    });
+  }, [])
+  
+  useEffect(() => {
+    axios("http://localhost:3000/expense/monthlyTotalAmount/")
+    .then(response => {
+      setExpenseMonthlyTotalAmount(response.data)
+    })
+    .catch(error => {
+      console.error("There was an error fetching the data!", error);
+    });
+  }, [])
+  
+  useEffect(() => {
+    axios("http://localhost:3000/expense/monthlyCreditCardTotalAmount/")
+    .then(response => {
+      setExpenseMonthlyCreditCardTotalAmount(response.data)
+    }).catch(error => {
+      console.error("There was an error fetching the data!", error);
+    });
+  },[])
+  
   return (
     <div className="flex min-h-screen bg-gray-100">
     <Menu/>
       <div className="flex-1 p-4">
         <div className="max-w-7xl mx-auto">
           <section className="grid sm:grid-cols-12 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-2">
-            <TrackingCards fieldName='Saldo Atual'/>
-            <TrackingCards fieldName='Entradas' amount={totalIncome}/>
-            <TrackingCards fieldName='Despesas' amount={totalExpense}/>
-            <TrackingCards fieldName='Balanço' amount={totalIncome - totalExpense}/>
-            <TrackingCards fieldName='Cartão de Crédito' amount={totalCreditCard}/>
+            <TrackingCards fieldName='Saldo Atual'amount={totalIncome - totalExpense}/>
+            <TrackingCards fieldName='Entradas' amount={incomeMonthlyTotalAmount}/>
+            <TrackingCards fieldName='Despesas' amount={expenseMonthlyTotalAmount}/>
+            <TrackingCards fieldName='Balanço Mensal' amount={incomeMonthlyTotalAmount - expenseMonthlyTotalAmount}/>
+            <TrackingCards fieldName='Cartão de Crédito' amount={expenseMonthlyCreditCardTotalAmount}/>
           </section>
           <section className='grid-cols-2 grid gap-4'>
               <Card>

@@ -1,7 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiResponse } from '@nestjs/swagger';
-import { ControllerOutput } from 'src/misc/interface/output.interface';
 import { User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -11,14 +10,10 @@ export class UserController {
 
     @Post()
     @ApiResponse({
+    type: "<CreateUserDto>",
     description: 'cadastra novos usuarios',
-    type: ControllerOutput<User>,
   })
-    async create(@Body() userDto: CreateUserDto): Promise<ControllerOutput> {
-        const data =  this.userService.create(userDto);
-        return {
-        data,
-        error: null,
-        };
-    }
+    async create(@Body() userDto: CreateUserDto): Promise<CreateUserDto> {
+      return this.userService.create(userDto);
+}
 }

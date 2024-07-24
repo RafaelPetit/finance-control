@@ -1,10 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { Expense } from '@prisma/client';
-import { ControllerOutput, ControllerPaginatedOutput } from 'src/misc/interface/output.interface';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { PartialExpenseDto } from './dto/partial-expense.dto';
-import { Pageable } from 'src/misc/interface/input.interface';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { ExpenseService } from './expense.service';
 
@@ -14,89 +12,76 @@ export class ExpenseController {
 
     @Post()
     @ApiResponse({
-    description: 'create new user',
-    type: ControllerOutput<Expense>,
+    description: 'create new Expense',
+    type: "<Expense>",
   })
-    async create(@Body() userDto: CreateExpenseDto): Promise<ControllerOutput> {
-        const data =  this.expenseService.create(userDto);
-
-        return {
-        data,
-        error: null,
-        };
+    async create(@Body() userDto: CreateExpenseDto): Promise<CreateExpenseDto> {
+      return await this.expenseService.create(userDto);
     }
 
-    @Get("/total")
+    @Get("/all")
     @ApiResponse({
-      type:ControllerOutput<Expense>,
-      description: 'Return the total amount'
+      type: "number",
+      description: 'Return all Expenses'
     })
-    async findTotal() :Promise<number>{
-      return this.expenseService.findTotal()
+    async findAll() :Promise<Expense[]>{
+      return await this.expenseService.findAll()
     }
 
-    @Get("/totalCreditCard")
+    @Get("/monthlyTotalAmount")
     @ApiResponse({
-      type:ControllerOutput<Expense>,
-      description: 'Return the total Credit Card amount'
+      type: "number",
+      description: 'Return the total amount of the month'
     })
-    async findTotalCreditCard() : Promise<number>{
-      return this.expenseService.findTotalCreditCard()
+    async findMonthTotalAmount() : Promise<number>{
+      return await this.expenseService.findMonthlyTotalAmount()
     }
 
-  @Get('/all')
-  @ApiResponse({
-    type: ControllerPaginatedOutput<Expense>,
-    description: 'Find all Expenses',
-  })
-  async findAll(
-    @Body() pagination: Pageable,
-  ): Promise<ControllerPaginatedOutput<Expense>> {
-    return {
-      data: await this.expenseService.findAll(pagination),
-      error: null,
-    };
-  }
+    @Get("/monthlyCreditCardTotalAmount")
+    @ApiResponse({
+      type: "number",
+      description: 'Return the total Credit Card amount of the month'
+    })
+    async findMonthlyCreditCardTotalAmount() : Promise<number>{
+      return await this.expenseService.findMonthlyCreditCardTotalAmount()
+    }
+
 
   @Get()
   @ApiResponse({
-    type: ControllerOutput<Expense>,
+    type: "<Expense>",
     description: 'Find one Expense',
   })
   async findOne(
     @Body() search: PartialExpenseDto,
-  ): Promise<ControllerOutput<Expense>> {
-    return {
-      data: await this.expenseService.findOne(search),
-      error: null,
-    };
+  ): Promise<Expense> {
+    return await this.expenseService.findOne(search)
   }
 
   @Patch(':id')
   @ApiResponse({
-    type: ControllerOutput<Expense>,
+    type: "<Expense>",
     description: 'Modify a Expense',
   })
   async update(
     @Param('id') id: number,
     @Body() updateExpenseDto: UpdateExpenseDto,
-  ): Promise<ControllerOutput<Expense>> {
+  ): Promise<Expense> {
     const data = await this.expenseService.update(
       +id,
       updateExpenseDto,
     );
-    return { data, error: null };
+    return data;
   }
 
   @Delete(':id')
   @ApiResponse({
-    type: ControllerOutput<Expense>,
+    type: "<Expense>",
     description: 'Delete one Expense',
   })
   async delete(
     @Param('id') id: number,
-  ): Promise<ControllerOutput<Expense>> {
-    const data = await this.expenseService.delete(+id,);
-    return { data, error: null };
+  ): Promise<Expense> {
+    return await this.expenseService.delete(+id,);
   }
 }

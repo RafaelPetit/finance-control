@@ -3,10 +3,9 @@ import { CreateIncomeDto } from './dto/create-income.dto';
 import { ClassConstructor } from 'class-transformer';
 import { MapperService } from 'src/misc/mapper/mapper.service';
 import { Income } from '@prisma/client';
-import { Pageable } from 'src/misc/interface/input.interface';
-import { Paginated } from 'src/misc/interface/output.interface';
 import { UpdateIncomeDto } from './dto/update-income.dto';
 import { IncomeRepository } from './repository/income.repository';
+import { filterByMonth } from 'src/misc/helpers/filterByMonth.helper';
 
 @Injectable()
 export class IncomeService {
@@ -26,8 +25,8 @@ export class IncomeService {
     }
   }
 
-  async findAll(pagination: Pageable): Promise<Paginated<Income>> {
-    const result = await this.incomeRepository.findAll(pagination);
+  async findAll(): Promise<Income[]> {
+    const result = await this.incomeRepository.findAll();
 
     if (!result || null) {
       throw new NotFoundException('No active incomes found');
@@ -36,9 +35,10 @@ export class IncomeService {
     return result;
   }
 
-  async findTotal(): Promise<number> {
-    const allproducts = await this.incomeRepository.findTotal()
-    return allproducts.reduce((total, item) => total + item.amount, 0); 
+  async findMonthlyTotalAmount(): Promise<number> {
+    const allProducts = await this.incomeRepository.findAll()
+    const currentMonthExpenses  = await filterByMonth(allProducts);
+    return currentMonthExpenses.reduce((total, item) => total + item.amount, 0);
   }
 
   async findOne(search: Partial<Income>): Promise<Income> {
