@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { $Enums, Income } from "@prisma/client";
 import { parseSearchToPrisma } from "src/misc/helpers/search.helper";
-import { Pageable } from "src/misc/interface/input.interface";
-import { Paginated } from "src/misc/interface/output.interface";
 import { PrismaService } from "src/misc/prisma/prisma.service";
 import { UpdateIncomeDto } from "../dto/update-income.dto";
 
@@ -14,31 +12,8 @@ export class IncomeRepository {
     return await this.prismaService.income.create({ data: income });
   }
 
-  async findAll(pageable: Pageable<Income>): Promise<Paginated<Income>> {
-    const page = pageable.page === null ? +pageable.page : 1;
-    const perPage =
-      pageable?.itemsPerPage === null ? +pageable.itemsPerPage : 10;
-    const where = {
-      ...(pageable.status && { status: pageable.status }),
-    };
-    const totalItems = await this.prismaService.income.count();
-    const totalPages = Math.ceil(totalItems / perPage);
-    const orderBy = {
-      [pageable.sortBy]: pageable.sortBy,
-    };
-    const items = await this.prismaService.income.findMany({
-      skip: (page - 1) * perPage,
-      orderBy: orderBy,
-      take: perPage,
-      where,
-    });
-
-    return {
-      page,
-      totalItems,
-      totalPages,
-      items: items,
-    };
+  async findAll (): Promise<Income[]> {
+    return this.prismaService.income.findMany()
   }
 
   async findOne(search: Partial<Income>): Promise<Income> {

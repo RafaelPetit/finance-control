@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { $Enums, Expense,  } from "@prisma/client";
 import { parseSearchToPrisma } from "src/misc/helpers/search.helper";
-import { Pageable } from "src/misc/interface/input.interface";
-import { Paginated } from "src/misc/interface/output.interface";
 import { PrismaService } from "src/misc/prisma/prisma.service";
 import { UpdateExpenseDto } from "../dto/update-expense.dto";
 
@@ -14,31 +12,17 @@ export class ExpenseRepository {
     return await this.prismaService.expense.create({ data: expense });
   }
 
-  async findAll(pageable: Pageable<Expense>): Promise<Paginated<Expense>> {
-    const page = pageable.page === null ? +pageable.page : 1;
-    const perPage =
-      pageable?.itemsPerPage === null ? +pageable.itemsPerPage : 10;
-    const where = {
-      ...(pageable.status && { status: pageable.status }),
-    };
-    const totalItems = await this.prismaService.expense.count();
-    const totalPages = Math.ceil(totalItems / perPage);
-    const orderBy = {
-      [pageable.sortBy]: pageable.sortBy,
-    };
-    const items = await this.prismaService.expense.findMany({
-      skip: (page - 1) * perPage,
-      orderBy: orderBy,
-      take: perPage,
-      where,
-    });
+  async findAll (): Promise<Expense[]> {
+    return this.prismaService.expense.findMany()
+  }
 
-    return {
-      page,
-      totalItems,
-      totalPages,
-      items: items,
-    };
+  async findMonthlyCreditCardTotalAmount (): Promise<Expense[]> {
+    return this.prismaService.expense.findMany(
+      {where: 
+      {
+        paymentMethod: "CREDIT"
+      }
+    })
   }
 
   async findOne(search: Partial<Expense>): Promise<Expense> {

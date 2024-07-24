@@ -5,8 +5,7 @@ import { Expense } from '@prisma/client';
 import { ClassConstructor } from 'class-transformer';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
-import { Paginated } from 'src/misc/interface/output.interface';
-import { Pageable } from 'src/misc/interface/input.interface';
+import { filterByMonth } from 'src/misc/helpers/filterByMonth.helper';
 
 @Injectable()
 export class ExpenseService {
@@ -26,14 +25,27 @@ export class ExpenseService {
         }
       }
     
-      async findAll(pagination: Pageable): Promise<Paginated<Expense>> {
-        const result = await this.expenseRepository.findAll(pagination);
+      async findAll(): Promise<Expense[]> {
+        const result = await this.expenseRepository.findAll();
     
         if (!result || null) {
           throw new NotFoundException('No active expenses found');
         }
     
         return result;
+      }
+
+      async findMonthlyTotalAmount(): Promise<number> {
+      const allProducts = await this.expenseRepository.findAll()
+      const currentMonthExpenses  = await filterByMonth(allProducts);
+      return currentMonthExpenses.reduce((total, item) => total + item.amount, 0);
+      }
+
+      async findMonthlyCreditCardTotalAmount(): Promise<number> {
+        const allproducts = await this.expenseRepository.findMonthlyCreditCardTotalAmount()
+        const currentMonthExpenses = await filterByMonth(allproducts)
+        const data = currentMonthExpenses.reduce((total, item) => total + item.amount, 0); 
+        return data
       }
     
       async findOne(search: Partial<Expense>): Promise<Expense> {

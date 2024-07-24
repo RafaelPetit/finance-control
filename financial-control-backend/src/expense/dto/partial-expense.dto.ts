@@ -33,7 +33,15 @@ export class ExpenseDto {
     })
     category: $Enums.ExpenseCategory
 
-    
+    @ApiProperty({
+        enum: ['CREDIT', "DEBIT"],
+        enumName: "$Enums.PaymentMethod",
+        description: 'payment Method'
+    })
+    @IsUppercase({ message: 'payment method must bem upperCase' })
+    @IsString({ message: 'payment method must be a string' })
+    @IsNotEmpty({ message: 'payment method must not be empty' })
+    paymentMethod: $Enums.PaymentMethod;
 }
 
 export class PartialExpenseDto extends PartialType(ExpenseDto) {}
