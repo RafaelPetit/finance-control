@@ -14,7 +14,7 @@ export class ExpenseController {
 
     @Post()
     @ApiResponse({
-    description: 'cadastra novos usuarios',
+    description: 'create new user',
     type: ControllerOutput<Expense>,
   })
     async create(@Body() userDto: CreateExpenseDto): Promise<ControllerOutput> {
@@ -24,6 +24,24 @@ export class ExpenseController {
         data,
         error: null,
         };
+    }
+
+    @Get("/total")
+    @ApiResponse({
+      type:ControllerOutput<Expense>,
+      description: 'Return the total amount'
+    })
+    async findTotal() :Promise<number>{
+      return this.expenseService.findTotal()
+    }
+
+    @Get("/totalCreditCard")
+    @ApiResponse({
+      type:ControllerOutput<Expense>,
+      description: 'Return the total Credit Card amount'
+    })
+    async findTotalCreditCard() : Promise<number>{
+      return this.expenseService.findTotalCreditCard()
     }
 
   @Get('/all')

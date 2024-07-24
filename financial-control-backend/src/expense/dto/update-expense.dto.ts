@@ -36,4 +36,14 @@ export class UpdateExpenseDto implements PartialExpenseDto{
     @IsNotEmpty({ message: 'Status must not be empty' })
     @IsOptional()
     status?: $Enums.Status;
+
+    @ApiProperty({
+        enum: ['CREDIT', "DEBIT"],
+        enumName: "$Enums.PaymentMethod",
+        description: 'payment Method'
+    })
+    @IsUppercase({ message: 'payment method must bem upperCase' })
+    @IsString({ message: 'payment method must be a string' })
+    @IsNotEmpty({ message: 'payment method must not be empty' })
+    paymentMethod?: $Enums.PaymentMethod;
 }

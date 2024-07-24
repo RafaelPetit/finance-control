@@ -36,6 +36,11 @@ export class IncomeService {
     return result;
   }
 
+  async findTotal(): Promise<number> {
+    const allproducts = await this.incomeRepository.findTotal()
+    return allproducts.reduce((total, item) => total + item.amount, 0); 
+  }
+
   async findOne(search: Partial<Income>): Promise<Income> {
     if (Object.keys(search).length === 0) {
       throw new BadRequestException(

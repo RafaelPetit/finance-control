@@ -41,6 +41,10 @@ export class IncomeRepository {
     };
   }
 
+  async findTotal (): Promise<Income[]> {
+    return this.prismaService.income.findMany()
+  }
+
   async findOne(search: Partial<Income>): Promise<Income> {
     const where = {
       ...parseSearchToPrisma(search),

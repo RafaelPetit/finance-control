@@ -19,6 +19,7 @@ export class ExpenseService {
       async create(createExpenseDto: CreateExpenseDto): Promise<CreateExpenseDto>{
         try {
             const toEntity =  this.mapperService.toEntity(createExpenseDto, this.entity, "ACTIVE",);
+            console.log(toEntity)
             return this.expenseRepository.create(toEntity)
         }
         catch(e) {
@@ -34,6 +35,16 @@ export class ExpenseService {
         }
     
         return result;
+      }
+
+      async findTotal(): Promise<number> {
+        const allproducts = await this.expenseRepository.findTotal()
+        return allproducts.reduce((total, item) => total + item.amount, 0); 
+      }
+
+      async findTotalCreditCard(): Promise<number> {
+        const allproducts = await this.expenseRepository.findTotalCreditCard()
+        return allproducts.reduce((total, item) => total + item.amount, 0); 
       }
     
       async findOne(search: Partial<Expense>): Promise<Expense> {
