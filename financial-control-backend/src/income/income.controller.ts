@@ -1,12 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { IncomeService } from './income.service';
-import { ControllerOutput, ControllerPaginatedOutput } from 'src/misc/interface/output.interface';
 import { ApiResponse } from '@nestjs/swagger';
 import { Income } from '@prisma/client';
 import { CreateIncomeDto } from './dto/create-income.dto';
-import { Pageable } from 'src/misc/interface/input.interface';
 import { PartialIncomeDto } from './dto/partial-income.dto';
 import { UpdateIncomeDto } from './dto/update-income.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('income')
 export class IncomeController {
@@ -14,80 +13,69 @@ export class IncomeController {
 
     @Post()
     @ApiResponse({
-    description: 'cadastra novos usuarios',
-    type: ControllerOutput<Income>,
+    description: 'create a new Income',
+    type: "<Income>",
   })
-    async create(@Body() userDto: CreateIncomeDto): Promise<ControllerOutput> {
+    async create(@Body() userDto: CreateIncomeDto): Promise<CreateIncomeDto> {
         const data =  this.incomeService.create(userDto);
 
-        return {
-        data,
-        error: null,
-        };
+        return data
     }
 
-  @Get('/all')
-  @ApiResponse({
-    type: ControllerPaginatedOutput<Income>,
-    description: 'Find all Incomes',
-  })
-  async findAll(
-    @Body() pagination: Pageable,
-  ): Promise<ControllerPaginatedOutput<Income>> {
-    return {
-      data: await this.incomeService.findAll(pagination),
-      error: null,
-    };
-  }
+    @Get("/all")
+      @ApiResponse({
+        type: "<Income[]>",
+        description: 'Return all Incomes'
+      })
+      async findAll() :Promise<Income[]>{
+        return await this.incomeService.findAll()
+    }
 
-  @Get("/total")
+    @Get("/monthlyTotalAmount")
+      @ApiResponse({
+        type: "<number>",
+        description: 'Return the total amount of the month'
+      })
+      async findTotal() :Promise<number>{
+        return await this.incomeService.findMonthlyTotalAmount()
+    }
+
+    @Get()
     @ApiResponse({
-      type:ControllerOutput<Income>,
-      description: 'Return the total amount'
+      type: "<Income>",
+      description: 'Find one Income',
     })
-    async findTotal() :Promise<number>{
-      return this.incomeService.findTotal()
+    async findOne(
+      @Body() search: PartialIncomeDto,
+    ): Promise<Income> {
+      return  await this.incomeService.findOne(search)
     }
 
-  @Get()
-  @ApiResponse({
-    type: ControllerOutput<Income>,
-    description: 'Find one Income',
-  })
-  async findOne(
-    @Body() search: PartialIncomeDto,
-  ): Promise<ControllerOutput<Income>> {
-    return {
-      data: await this.incomeService.findOne(search),
-      error: null,
-    };
-  }
+    @Patch(':id')
+    @ApiResponse({
+      type: "<Income>",
+      description: 'Modify a Income',
+    })
+    async update(
+      @Param('id') id: number,
+      @Body() updateIncomeDto: UpdateIncomeDto,
+    ): Promise<Income> {
+      const data = await this.incomeService.update(
+        +id,
+        updateIncomeDto,
+      );
+      return data
+    }
 
-  @Patch(':id')
-  @ApiResponse({
-    type: ControllerOutput<Income>,
-    description: 'Modify a Income',
-  })
-  async update(
-    @Param('id') id: number,
-    @Body() updateIncomeDto: UpdateIncomeDto,
-  ): Promise<ControllerOutput<Income>> {
-    const data = await this.incomeService.update(
-      +id,
-      updateIncomeDto,
-    );
-    return { data, error: null };
-  }
-
-  @Delete(':id')
-  @ApiResponse({
-    type: ControllerOutput<Income>,
-    description: 'Delete one Income',
-  })
-  async delete(
-    @Param('id') id: number,
-  ): Promise<ControllerOutput<Income>> {
-    const data = await this.incomeService.delete(+id,);
-    return { data, error: null };
-  }
+    @Delete(':id')
+    @ApiResponse({
+      type: "<Income>",
+      description: 'Delete one Income',
+    })
+    async delete(
+      @Param('id') id: number,
+    ): Promise<Income> {
+      const data = await this.incomeService.delete(+id);
+      return data
+    }
 }

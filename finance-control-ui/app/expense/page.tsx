@@ -1,8 +1,7 @@
 "use client"
 import { Menu } from '@/components/menu';
-import { PlusIcon, CurrencyDollarIcon, HomeIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
 import React, { useState } from 'react';
+import jwt_decode, { jwtDecode } from 'jwt-decode';
 
 const Expense = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +10,7 @@ const Expense = () => {
     category: 'FOOD',
     paymentMethod: 'CREDIT'
   });
+  const [error, setError] = useState('');
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     setFormData({
@@ -24,17 +24,26 @@ const Expense = () => {
     console.log('Form submission started');
 
     try {
-      const response = await fetch('http://localhost:3000/expense', {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      const decodedToken: any = jwtDecode(token);
+      const userId = decodedToken.userId;
+
+      const response = await fetch('http://localhost:3000/income', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           description: formData.description,
           amount: parseFloat(formData.amount),
           category: formData.category,
           paymentMethod: formData.paymentMethod,
-          userId: 1 //retirar depois de autenticar o user
+          userId: userId
         }),
       });
 
@@ -52,6 +61,7 @@ const Expense = () => {
       });
     } catch (error) {
       console.error('Erro ao cadastrar despesa:', error);
+      setError('Erro ao cadastrar despesa');
     }
   };
 
@@ -132,6 +142,7 @@ const Expense = () => {
               className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg hover:from-purple-500 hover:to-blue-500 transition-colors duration-300">
               Cadastrar
             </button>
+            {error && <p className="text-red-500 text-center mt-4">{error}</p>}
           </form>
         </div>
       </div>
