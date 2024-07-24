@@ -14,7 +14,6 @@ export class AuthService {
     async signIn  (signInDto: SignInDto) : Promise<any>{
         const user = await this.userService.findByEmail(signInDto.email)
         if(!user) throw new NotFoundException('User not found');
-        console.log(user)
 
         const passwordMatch = await bcrypt.compare(signInDto.password, user.password)
         if(!passwordMatch) throw new UnauthorizedException('Invalid Credentials');

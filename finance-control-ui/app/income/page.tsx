@@ -20,7 +20,6 @@ const Income = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    console.log('Form submission started');
 
     try {
       const response = await fetch('http://localhost:3000/income', {
@@ -32,7 +31,7 @@ const Income = () => {
           description: formData.description,
           amount: parseFloat(formData.amount),
           category: formData.category,
-          userId: 1 //retirar depois de autenticar o user
+          userId: 1 //retirar depois de passar o token pela header
         }),
       });
 

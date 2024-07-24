@@ -1,7 +1,6 @@
 "use client"
 import { Menu } from '@/components/menu';
 import React, { useState } from 'react';
-import jwt_decode, { jwtDecode } from 'jwt-decode';
 
 const Expense = () => {
   const [formData, setFormData] = useState({
@@ -21,29 +20,20 @@ const Expense = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    console.log('Form submission started');
 
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token found');
-      }
-
-      const decodedToken: any = jwtDecode(token);
-      const userId = decodedToken.userId;
-
-      const response = await fetch('http://localhost:3000/income', {
+      
+      const response = await fetch('http://localhost:3000/expense', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           description: formData.description,
           amount: parseFloat(formData.amount),
           category: formData.category,
           paymentMethod: formData.paymentMethod,
-          userId: userId
+          userId: 1
         }),
       });
 
